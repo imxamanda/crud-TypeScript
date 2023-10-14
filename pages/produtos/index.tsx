@@ -2,27 +2,27 @@ import React, { useEffect, useState } from 'react'
 import { Navbar, Container, Nav, Table } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { http } from '@/services/Api';
-import { IUsuario } from '@/type/Usuario';
+import { IProdutos } from '@/type/Produtos';
 import { FiEdit } from 'react-icons/fi';
 import { BsTrash3 } from 'react-icons/bs';
 import Link from 'next/link';
 
-const Usuarios = () => {
+const Produtos = () => {
 
-    const [usuarios, setUsuarios] = useState<IUsuario[]>([])
+    const [produtos, setProdutos] = useState<IProdutos[]>([])
 
     useEffect(() => {
-        http.get('/users').then(resultado => {
-            setUsuarios(resultado.data)
+        http.get('/products').then(resultado => {
+            setProdutos(resultado.data)
         })
     }, [])
 
-    console.log(usuarios)
-    function excluirUsuario(id: number) {
+    console.log(produtos)
+    function excluirProduto(id: number) {
       try {
         http.delete(`users/${id}`).then(resultado => {
           console.log(resultado)
-          setUsuarios(usuarios => usuarios.filter(usuario => usuario.id !== id))
+          setProdutos(produtos => produtos.filter(produtos => produtos.id !== id))
       })
       } catch(error) {
         console.log(error)
@@ -37,14 +37,14 @@ const Usuarios = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/usuarios">Usuários</Nav.Link>
+            <Nav.Link href="/produtos">Produtos</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
 
     <Container>
-    <Link href="/usuarios/form" className='mb-2 btn btn-primary'>
+    <Link href="/produtos/form" className='mb-2 btn btn-primary'>
                 Novo
     </Link>
 
@@ -53,23 +53,23 @@ const Usuarios = () => {
                       <tr>
                           <th></th>
                           <th>ID</th>
-                          <th>Primeiro Nome</th>
-                          <th>Último nome</th>
-                          <th>Email</th>
+                          <th>Nome</th>
+                          <th>Categoria</th>
+                          <th>Preço</th>
                       </tr>
                   </thead>
                   <tbody>
-                      {usuarios?.map((item) => (
+                      {produtos?.map((item) => (
                           <tr key={item.id}>
                               <td>
-                                  <Link href={'/usuarios/' + item.id}> <FiEdit className='text-primary' /></Link>
-                                  <BsTrash3 onClick={() => excluirUsuario(item.id)} className='text-danger me-4' /> 
+                                  <Link href={'/produtos/' + item.id}> <FiEdit className='text-primary' /></Link>
+                                  <BsTrash3 onClick={() => excluirProduto(item.id)} className='text-danger me-4' /> 
                               </td>
   
                               <td>{item.id}</td>
-                              <td>{item.firstName}</td>
-                              <td>{item.lastName}</td>
-                              <td>{item.email}</td>
+                              <td>{item.nome}</td>
+                              <td>{item.categoria}</td>
+                              <td>{item.preco}</td>
                           </tr>
                       ))}
   
@@ -81,4 +81,4 @@ const Usuarios = () => {
   )
 }
 
-export default Usuarios
+export default Produtos
